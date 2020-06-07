@@ -10,3 +10,16 @@ a {
 h1 {
   text-align: center;
 }
+
+.div-sim {
+  display: grid;
+  grid-template-rows: repeat(var(--numRows), var(--gridHeight));
+  grid-template-columns: repeat(var(--numCols), auto);
+}
+
+.sim-cell {
+  grid-column-start: auto;
+  grid-row-start: auto;
+  margin: 5px;
+  background-color:pink;
+}

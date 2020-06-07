@@ -2,3 +2,12 @@ extends layout
 
 block content
   h1= title
+  div(class='div-writeup') 
+    p= writeup
+  div(class='div-sim', style=`--numRows:${numRows}; --numCols:${numCols}`)
+    - for (var i = 0; i < numRows; ++i) {
+      - for (var j = 0; j < numCols; ++j) {
+          div(class='sim-cell') 
+            p SIM CELL
+      - }
+    - }
