@@ -14,12 +14,35 @@ h1 {
 .div-sim {
   display: grid;
   grid-template-rows: repeat(var(--numRows), var(--gridHeight));
-  grid-template-columns: repeat(var(--numCols), auto);
+  grid-template-columns: repeat(var(--numCols), var(--colWidth));
+  grid-gap: 0;
 }
 
 .sim-cell {
   grid-column-start: auto;
   grid-row-start: auto;
   margin: 5px;
-  background-color:pink;
+  background-color:lightblue;
+  height: 100%;
+  width: 100%;
+  margin: 1px;
+  outline-color: black;
+  outline-style: solid;
+  text-align: center;
+}
+
+.vacuum {
+  margin-top: 5px;
+  height: 40%;
+  width: 8em;
+  background-color: darkgray;
+  display: inline-grid;
+}
+
+.dirt {
+  margin-top: 20px;
+  height: 2rem;
+  width: 80%;
+  background-color: brown;
+  display: inline-grid;
 }

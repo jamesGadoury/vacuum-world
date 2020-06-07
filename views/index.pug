@@ -4,10 +4,12 @@ block content
   h1= title
   div(class='div-writeup') 
     p= writeup
-  div(class='div-sim', style=`--numRows:${numRows}; --numCols:${numCols}`)
-    - for (var i = 0; i < numRows; ++i) {
-      - for (var j = 0; j < numCols; ++j) {
-          div(class='sim-cell') 
-            p SIM CELL
-      - }
-    - }
+  div(class='div-sim', style=`--numRows:${numRows}; --numCols:${numCols}; --gridHeight:${gridHeight}; --colWidth:${colWidth};`)
+    each cell in grid
+      div(class='sim-cell')
+        if cell.vacuumPresent
+          div(class='vacuum')
+        else
+          div(class='vacuum', style="visibility:hidden;")
+        if cell.dirtPresent
+          div(class='dirt')
