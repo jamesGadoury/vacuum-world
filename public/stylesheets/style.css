@@ -28,7 +28,8 @@ h1 {
   margin: 1px;
   outline-color: black;
   outline-style: solid;
-  text-align: center
+  text-align: center;
+  position: relative;
 }
 
 .vacuum {
@@ -38,14 +39,27 @@ h1 {
   background-color: darkgray;
   display: inline-grid;
   font-family: sans-serif;
+  position: relative;
+  top: 25%;
+  
 }
 
-.dirt {
-  margin-top: 1em;
-  height: 2rem;
-  width: 80%;
+.dirty {
+  bottom: 0px;
+  height: 30%;
+  width: 100%;
   background-color: brown;
-  display: inline-grid;
   bottom: 0px;
   font-family: sans-serif;
+  position: absolute;
+}
+
+.clean {
+  bottom: 0px;
+  height: 30%;
+  width: 100%;
+  background-color: sandybrown;
+  bottom: 0px;
+  font-family: sans-serif;
+  position: absolute;
 }

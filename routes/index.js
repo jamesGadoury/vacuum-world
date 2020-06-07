@@ -25,8 +25,8 @@ function makeGrid(numRows, numCols) {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  let numRows = 8;
-  let numCols = 8;
+  let numRows = 1;
+  let numCols = 4;
   // let gridHeight = numRows * 2 + "em";
   let gridHeight = 100 / numRows + "%";
   let colWidth = 100 / numCols + "%";

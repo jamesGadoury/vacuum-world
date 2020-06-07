@@ -10,8 +10,10 @@ block content
         if cell.vacuumPresent
           div(class='vacuum')
             p vacuum
-        else
-          div(class='vacuum', style="visibility:hidden;")
+
         if cell.dirtPresent
-          div(class='dirt')
-            p dirt
+          div(class='dirty')
+            p dirty
+        else
+          div(class='clean')
+            p clean
