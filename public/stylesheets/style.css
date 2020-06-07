@@ -13,7 +13,7 @@ h1 {
 
 .div-sim {
   display: grid;
-  grid-template-rows: repeat(var(--numRows), var(--gridHeight));
+  grid-template-rows: repeat(var(--numRows), 7rem);
   grid-template-columns: repeat(var(--numCols), var(--colWidth));
   grid-gap: 0;
 }
@@ -28,21 +28,24 @@ h1 {
   margin: 1px;
   outline-color: black;
   outline-style: solid;
-  text-align: center;
+  text-align: center
 }
 
 .vacuum {
-  margin-top: 5px;
+  margin-top: 0.5em;
   height: 40%;
-  width: 8em;
+  width: 4rem;
   background-color: darkgray;
   display: inline-grid;
+  font-family: sans-serif;
 }
 
 .dirt {
-  margin-top: 20px;
+  margin-top: 1em;
   height: 2rem;
   width: 80%;
   background-color: brown;
   display: inline-grid;
+  bottom: 0px;
+  font-family: sans-serif;
 }

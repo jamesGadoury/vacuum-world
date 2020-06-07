@@ -25,13 +25,14 @@ function makeGrid(numRows, numCols) {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  let numRows = 3;
-  let numCols = 4;
-  let gridHeight = numRows * 50 + "px";
+  let numRows = 8;
+  let numCols = 8;
+  // let gridHeight = numRows * 2 + "em";
+  let gridHeight = 100 / numRows + "%";
   let colWidth = 100 / numCols + "%";
   res.render('index', { 
     title: 'Vacuum World', 
-    writeup: 'Hello User',
+    writeup: '',
     numRows: numRows,
     numCols: numCols,
     gridHeight: gridHeight,
