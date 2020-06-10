@@ -22,7 +22,7 @@ h1 {
   grid-column-start: auto;
   grid-row-start: auto;
   margin: 5px;
-  background-color:lightblue;
+  background-color:var(--floorColor);
   height: 100%;
   width: 100%;
   margin: 1px;
@@ -34,13 +34,13 @@ h1 {
 
 .vacuum {
   margin-top: 0.5em;
-  height: 40%;
-  width: 4rem;
+  height: 80%;
+  width: 80%;
   background-color: darkgray;
   display: inline-grid;
   font-family: sans-serif;
   position: relative;
-  top: 25%;
+  text-align: center;
   
 }
 

@@ -6,14 +6,12 @@ block content
     p= writeup
   div(class='div-sim', style=`--numRows:${numRows}; --numCols:${numCols}; --gridHeight:${gridHeight}; --colWidth:${colWidth};`)
     each cell in grid
-      div(class='sim-cell')
+      - var color
+      if cell.dirtPresent
+        - color="SaddleBrown"
+      else
+        - color="Cornsilk"
+      div(class='sim-cell', style=`--floorColor:${color}`)
         if cell.vacuumPresent
           div(class='vacuum')
             p vacuum
-
-        if cell.dirtPresent
-          div(class='dirty')
-            p dirty
-        else
-          div(class='clean')
-            p clean
