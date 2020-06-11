@@ -2,16 +2,8 @@ extends layout
 
 block content
   h1= title
-  div(class='div-writeup') 
-    p= writeup
-  div(class='div-sim', style=`--numRows:${numRows}; --numCols:${numCols}; --gridHeight:${gridHeight}; --colWidth:${colWidth};`)
-    each cell in grid
-      - var color
-      if cell.dirtPresent
-        - color="SaddleBrown"
-      else
-        - color="Cornsilk"
-      div(class='sim-cell', style=`--floorColor:${color}`)
-        if cell.vacuumPresent
-          div(class='vacuum')
-            p vacuum
+  div(class='welcome') 
+    p Welcome to Vacuum World!
+    p This is a simulated universe of floors and vacuums!
+    p How exciting!!!
+    p Click a link to a world in the above navbar!

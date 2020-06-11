@@ -1,13 +1,54 @@
+html {
+  font-size: 100%;
+  box-sizing: border-box;
+}
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin: 0px;
+  padding: 0px;
+  min-height: 100vh;
 }
 
-a {
-  color: #00B7FF;
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+  background-color: #111;
 }
 
 h1 {
+  text-align: center;
+}
+
+.container {
+  display:grid;
+  grid-template-rows: auto auto;
+  margin: auto;
+}
+
+.navigation-bar {
+  grid-row-start: 1;
+}
+
+.content {
+  grid-row-start: 2;
   text-align: center;
 }
 
@@ -16,6 +57,8 @@ h1 {
   grid-template-rows: repeat(var(--numRows), 7rem);
   grid-template-columns: repeat(var(--numCols), var(--colWidth));
   grid-gap: 0;
+  width: 60vw;
+  margin: 0 auto;
 }
 
 .sim-cell {
@@ -42,24 +85,4 @@ h1 {
   position: relative;
   text-align: center;
   
-}
-
-.dirty {
-  bottom: 0px;
-  height: 30%;
-  width: 100%;
-  background-color: brown;
-  bottom: 0px;
-  font-family: sans-serif;
-  position: absolute;
-}
-
-.clean {
-  bottom: 0px;
-  height: 30%;
-  width: 100%;
-  background-color: sandybrown;
-  bottom: 0px;
-  font-family: sans-serif;
-  position: absolute;
 }

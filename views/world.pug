@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  h1= title
+  div(class='div-writeup') 
+    p= writeup
+  div(class='div-sim', style=`--numRows:${numRows}; --numCols:${numCols}; --gridHeight:${gridHeight}; --colWidth:${colWidth};`)
+    each cell in grid
+      - var color
+      if cell.dirtPresent
+        - color="SaddleBrown"
+      else
+        - color="Cornsilk"
+      div(class='sim-cell', style=`--floorColor:${color}`)
+        if cell.vacuumPresent
+          div(class='vacuum')
+            p vacuum
