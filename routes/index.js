@@ -1,11 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
+const index_controller = require('../controllers/indexController');
+
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { 
-    title: 'Vacuum World',
-  });
-});
+router.get('/', index_controller.home_page_get);
 
 module.exports = router;

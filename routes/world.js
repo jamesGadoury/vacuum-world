@@ -1,44 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
-class Cell {
-  constructor(vacuumPresent, dirtPresent) {
-    this.vacuumPresent = vacuumPresent;
-    this.dirtPresent   = dirtPresent;
-  }
-}
-
-function makeGrid(numRows, numCols) {
-  let grid = [];
-  for (let i = 0; i < numRows; ++i) {
-    for (let j = 0; j < numCols; ++j) {
-      grid[i*numCols + j] = new Cell(false, false);
-    }
-  }
-
-  //TODO fix
-  grid[0].vacuumPresent = true;
-  grid[1].dirtPresent = true;
-  grid[2] = new Cell(true, true);
-  return grid;
-}
+const world_controller = require('../controllers/worldController');
 
 /* GET home page. */
-router.get('/1', function(req, res, next) {
-  let numRows = 1;
-  let numCols = 4;
-  // let gridHeight = numRows * 2 + "em";
-  let gridHeight = 100 / numRows + "%";
-  let colWidth = 100 / numCols + "%";
-  res.render('world', { 
-    title: 'Vacuum World', 
-    writeup: '',
-    numRows: numRows,
-    numCols: numCols,
-    gridHeight: gridHeight,
-    colWidth: colWidth,
-    grid: makeGrid(numRows, numCols) 
-  });
-});
+router.get('/1', world_controller.world_1_get);
 
 module.exports = router;
