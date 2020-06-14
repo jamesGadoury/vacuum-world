@@ -1,5 +1,4 @@
-import React from 'react';
-import { Actions, ActionString } from './Actions';
+import {Actions} from './Actions';
 
 function selectRandomCell(gridSize) {
    return Math.floor(Math.random() * gridSize);
@@ -16,131 +15,84 @@ class Cell {
       this.dirtPresent   = dirtPresent; 
    }
 }
- 
-class World extends React.Component {
-   constructor(props) {
-      super(props);
-      this.state = {
-         numRows: props.numRows, 
-         numCols: props.numCols, 
-         world: this.initWorld(props.numRows, props.numCols), 
-         getRobotAction: props.robot,
-         robotActionStr: ""
-      };
-      this.setSimStyleProperties(props.numRows, props.numCols)
-   }
- 
-   initGrid(numRows, numCols) {
-      let grid = [];
-      for (let i = 0; i < numRows; ++i) {
-         for (let j = 0; j < numCols; ++j) {
-            grid[getFlattenedIdx(j,i,numCols)] = new Cell(j, i, false, false);
-         }
+
+function initGrid(numRows, numCols) {
+   let grid = [];
+   for (let i = 0; i < numRows; ++i) {
+      for (let j = 0; j < numCols; ++j) {
+         grid[getFlattenedIdx(j,i,numCols)] = new Cell(j, i, false, false);
       }
-      return grid;
    }
- 
-   initWorld(numRows, numCols) {
-      let grid = this.initGrid(numRows, numCols);
-      let size = numRows * numCols;
+   return grid;
+}
 
-      let robotIdx = selectRandomCell(size);
+function initWorld(numRows, numCols) {
+   let world = new World(numRows, numCols, initGrid(numRows, numCols), {x: selectRandomCell(numCols), y: selectRandomCell(numRows)});
+   world.grid[world.robotIdx()].vacuumPresent = true;
+   world.markRandomSpotsWithDirt();
+   return world;
+}
 
-      grid[robotIdx].vacuumPresent = true;
+function updateWorld(world, robotAction) {
+   let grid     = world.grid;
+   let pos      = world.robotPosition;
+   let robotIdx = world.robotIdx();
+   let numRows  = world.numRows;
+   let numCols  = world.numCols;
 
-      // now select random spots for dirt (some may be picked multiple times)
-      let randomPickCount = Math.floor(size / 2);
+   if (robotAction === Actions.CLEAN) {
+      grid[robotIdx].dirtPresent = false;
+   }
+   else {
+      grid[robotIdx].vacuumPresent = false;
+      if (robotAction === Actions.LEFT && pos.x > 0) {
+         pos.x--;
+      }
+      else if (robotAction === Actions.RIGHT && pos.x < numCols-1) {
+         pos.x++;
+      }
+      else if (robotAction === Actions.UP && pos.y > 0) {
+         pos.y--;
+      }
+      else if (robotAction === Actions.DOWN && pos.y < numRows-1) {
+         pos.y++;
+      }
+      grid[getFlattenedIdx(pos.x, pos.y, numCols)].vacuumPresent = true;
+   }
+
+   return new World(numRows, numCols, grid, pos);
+}
+
+class World {
+   constructor(numRows, numCols, grid, robotPos) {
+      this.numRows       = numRows;
+      this.numCols       = numCols;
+      this.grid          = grid;
+      this.robotPosition = robotPos;
+   }
+
+   markRandomSpotsWithDirt() {
+      let randomPickCount = Math.floor(this.size() / 2);
       for (let _ = 0; _ < randomPickCount; ++_) {
-         grid[selectRandomCell(size)].dirtPresent = true;
+         this.grid[this.randomIdx()].dirtPresent = true;
       }
-
-      return {grid:grid, robotPosition:grid[robotIdx].position};
-   }
- 
- 
-   setSimStyleProperties(numRows, numCols) {
-      document.documentElement.style.setProperty("--numRows", numRows);
-      document.documentElement.style.setProperty("--numCols", numCols);
-      document.documentElement.style.setProperty("--colWidth", 100 / numCols + "%");
    }
 
-   processRobotAction() {
-      let world  = this.state.world;
-      let grid   = world.grid;
-      let pos    = world.robotPosition;
-      let robotIdx    = getFlattenedIdx(pos.x, pos.y, this.state.numCols);
-      let action = this.state.getRobotAction(grid, robotIdx);
+   robotIdx() {
+      return getFlattenedIdx(this.robotPosition.x, this.robotPosition.y, this.numCols);
+   }
 
-      if (action === Actions.CLEAN) {
-         grid[robotIdx].dirtPresent = false;
-      }
-      else {
-         grid[robotIdx].vacuumPresent = false;
-         if (action === Actions.LEFT && pos.x > 0) {
-            pos.x--;
-         }
-         else if (action === Actions.RIGHT && pos.x < this.state.numCols-1) {
-            pos.x++;
-         }
-         else if (action === Actions.UP && pos.y > 0) {
-            pos.y--;
-         }
-         else if (action === Actions.DOWN && pos.y < this.state.numRows-1) {
-            pos.y++;
-         }
-         grid[getFlattenedIdx(pos.x, pos.y, this.state.numCols)].vacuumPresent = true;
-      }
-      
-      return {world: { grid: grid, robotPosition: pos }, action: action};
+   size() {
+      return this.numRows*this.numCols;
    }
- 
-   stepSimulation() {
-      let {world, action} = this.processRobotAction();
-      this.setState({
-         world:world,
-         robotActionStr:ActionString(action),
-      });
+
+   randomIdx() {
+      return selectRandomCell(this.size());
    }
- 
-   componentDidMount() {
-      this.timerId = setInterval(
-         () => this.stepSimulation(),
-         1000
-      );
-   }
- 
-   componentWillUnmount() {
-      clearInterval(this.timerId);
-   }
- 
-   renderVacuum(dirtPresent) {
-      if (dirtPresent) {
-         return (
-         <div className='sim-cell' style={{'background-color':'SaddleBrown'}}>
-            <div className='vacuum'>{this.state.robotActionStr}</div>
-         </div>
-         )
-      }
-      return (
-         <div className='sim-cell' style={{'background-color':'Cornsilk'}}>
-         <div className='vacuum'>{this.state.robotActionStr}</div>
-         </div>
-      )
-   }
- 
-   render() {
-      return (
-         this.state.world.grid.map((cell) => {
-            if (cell.vacuumPresent) {
-               return this.renderVacuum(cell.dirtPresent);
-            }
-            if (cell.dirtPresent) {
-               return <div className='sim-cell' style={{'background-color':'SaddleBrown'}}></div>;
-            }
-            return <div className='sim-cell' style={{'background-color':'Cornsilk'}}></div>
-         })
-      );
+
+   robotCell() {
+      return this.grid[this.robotIdx()];
    }
 }
 
-export default World;
+export {initWorld, updateWorld};
