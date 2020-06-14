@@ -34,32 +34,25 @@ class WorldSim extends React.Component {
       clearInterval(this.timerId);
    }
  
-   renderVacuum(dirtPresent) {
-      if (dirtPresent) {
+   renderVacuum(cell) {
+      if (cell.vacuumPresent) {
          return (
-         <div className='sim-cell' style={{'background-color':'SaddleBrown'}}>
-            <div className='vacuum'><p className='action'>{this.state.robotActionStr}</p></div>
-         </div>
+         <div className='vacuum'><p className='action'>{this.state.robotActionStr}</p></div>
          )
       }
-      return (
-         <div className='sim-cell' style={{'background-color':'Cornsilk'}}>
-         <div className='vacuum'><p className='action'>{this.state.robotActionStr}</p></div>
-         </div>
-      )
+      return "";
+   }
+
+   renderCell(cell) {
+      if (cell.dirtPresent) {
+         return <div className='sim-cell' style={{'background-color':'SaddleBrown'}}>{this.renderVacuum(cell)}</div>;
+      }
+      return <div className='sim-cell' style={{'background-color':'Cornsilk'}}>{this.renderVacuum(cell)}</div>
    }
 
    renderCells() {
       return (
-         this.state.world.grid.map((cell) => {
-            if (cell.vacuumPresent) {
-               return this.renderVacuum(cell.dirtPresent);
-            }
-            if (cell.dirtPresent) {
-               return <div className='sim-cell' style={{'background-color':'SaddleBrown'}}></div>;
-            }
-            return <div className='sim-cell' style={{'background-color':'Cornsilk'}}></div>
-         })
+         this.state.world.grid.map((cell) => this.renderCell(cell))
       );
    }
  
