@@ -1,16 +1,36 @@
 import {Actions, ActionString} from './Actions';
 
-function DumbBot(world) {
-   if (world.robotCell().dirtPresent) {
-      console.log(ActionString(Actions.CLEAN));
-      return Actions.CLEAN;
+class DumbBot {
+   constructor() {
+      this.memory = [];
    }
-   if (world.robotIdx() === 0) {
-      console.log(ActionString(Actions.RIGHT));
-      return Actions.RIGHT;
+   nextAction(world) {
+      let nextAction;
+      if (world.robotCell().dirtPresent) {
+         nextAction = Actions.CLEAN;
+      }
+      else {
+         if (this.lastAction() === Actions.LEFT) {
+            if (world.robotPosition.x > 0) {
+               nextAction = Actions.LEFT;
+            } else {
+               nextAction = Actions.RIGHT;
+            }
+         } else {
+            if (world.robotPosition.x < world.numCols-1) {
+               nextAction = Actions.RIGHT;
+            } else {
+               nextAction = Actions.LEFT;
+            }
+         }
+      }
+      console.log(ActionString(nextAction));
+      this.memory.push(nextAction);
+      return nextAction;
    }
-   console.log(ActionString(Actions.LEFT));
-   return Actions.LEFT;
+   lastAction() {
+      return this.memory[this.memory.length-1];
+   }
 }
 
 export { DumbBot };

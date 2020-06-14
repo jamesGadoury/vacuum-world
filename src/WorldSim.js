@@ -7,7 +7,7 @@ class WorldSim extends React.Component {
       super(props);
       this.state = {
          world: initWorld(props.numRows, props.numCols),
-         getRobotAction: props.robot,
+         robot: props.robot,
          robotActionStr: ""
       };
       document.documentElement.style.setProperty("--numRows", props.numRows);
@@ -16,7 +16,7 @@ class WorldSim extends React.Component {
    }
  
    stepSimulation() {
-      let action = this.state.getRobotAction(this.state.world);
+      let action = this.state.robot.nextAction(this.state.world);
       this.setState({
          world: updateWorld(this.state.world, action),
          robotActionStr:ActionString(action),
