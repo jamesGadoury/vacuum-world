@@ -19,7 +19,7 @@ class Cell {
 class World extends React.Component {
    constructor(props) {
       super(props);
-      this.state = {numRows: props.numRows, numCols: props.numCols, world: this.initWorld(props.numRows, props.numCols, props.robotIdx)};
+      this.state = {numRows: props.numRows, numCols: props.numCols, world: this.initWorld(props.numRows, props.numCols)};
       this.setSimStyleProperties(props.numRows, props.numCols)
    }
  
@@ -33,9 +33,11 @@ class World extends React.Component {
       return grid;
    }
  
-   initWorld(numRows, numCols, robotIdx) {
+   initWorld(numRows, numCols) {
       let grid = this.initGrid(numRows, numCols);
       let size = numRows * numCols;
+
+      let robotIdx = selectRandomCell(size);
 
       grid[robotIdx].vacuumPresent = true;
 
@@ -149,4 +151,4 @@ class World extends React.Component {
    }
 }
 
-export { World, selectRandomCell }
+export default World
