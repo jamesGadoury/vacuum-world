@@ -48,8 +48,8 @@ class WorldSim extends React.Component {
          </div>
       )
    }
- 
-   render() {
+
+   renderCells() {
       return (
          this.state.world.grid.map((cell) => {
             if (cell.vacuumPresent) {
@@ -60,6 +60,14 @@ class WorldSim extends React.Component {
             }
             return <div className='sim-cell' style={{'background-color':'Cornsilk'}}></div>
          })
+      );
+   }
+ 
+   render() {
+      return (
+         <div className="div-sim">
+            {this.renderCells()}
+         </div>
       );
    }
 }

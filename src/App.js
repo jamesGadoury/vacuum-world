@@ -9,9 +9,9 @@ function App() {
     <div className="App">
       <div className="App-header">
         <h1>Vacuum World</h1>
-        <div className="div-sim">
-          <WorldSim numRows={1} numCols={6} robot={new DumbBot()}/>
-        </div>
+        
+        <WorldSim numRows={3} numCols={6} robot={new DumbBot()}/>
+
       </div>     
     </div>
   );
