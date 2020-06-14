@@ -1,5 +1,6 @@
 import React from 'react';
 import World from './World';
+import { DumbBot } from './Robots';
 
 import './App.css';
 
@@ -9,7 +10,7 @@ function App() {
       <div className="App-header">
         <h1>Vacuum World</h1>
         <div className="div-sim">
-          <World numRows={1} numCols={2}/>
+          <World numRows={1} numCols={2} robot={DumbBot}/>
         </div>
       </div>     
     </div>

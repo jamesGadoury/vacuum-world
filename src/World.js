@@ -19,7 +19,7 @@ class Cell {
 class World extends React.Component {
    constructor(props) {
       super(props);
-      this.state = {numRows: props.numRows, numCols: props.numCols, world: this.initWorld(props.numRows, props.numCols)};
+      this.state = {numRows: props.numRows, numCols: props.numCols, world: this.initWorld(props.numRows, props.numCols), getRobotAction: props.robot};
       this.setSimStyleProperties(props.numRows, props.numCols)
    }
  
@@ -56,30 +56,13 @@ class World extends React.Component {
       document.documentElement.style.setProperty("--numCols", numCols);
       document.documentElement.style.setProperty("--colWidth", 100 / numCols + "%");
    }
- 
-   getRobotAction() {
+
+   processRobotAction() {
       let world = this.state.world;
       let grid = world.grid;
       let pos = world.robotPosition;
       let idx = getFlattenedIdx(pos.x, pos.y, this.state.numCols);
- 
-      if (grid[idx].dirtPresent) {
-         console.log("CLEAN");
-         return "CLEAN";
-      }
-      if (idx === 0) {
-         console.log("RIGHT");
-         return "RIGHT";
-      }
-      console.log("LEFT");
-      return "LEFT";
-   }
- 
-   processRobotAction(action) {
-      let world = this.state.world;
-      let grid = world.grid;
-      let pos = world.robotPosition;
-      let idx = getFlattenedIdx(pos.x, pos.y, this.state.numCols);
+      let action = this.state.getRobotAction(grid, idx);
 
       if (action === "CLEAN") {
          grid[idx].dirtPresent = false;
@@ -106,7 +89,7 @@ class World extends React.Component {
  
    stepSimulation() {
       this.setState({
-         world:this.processRobotAction(this.getRobotAction())
+         world:this.processRobotAction()
       });
    }
  
@@ -151,4 +134,4 @@ class World extends React.Component {
    }
 }
 
-export default World
+export default World;
