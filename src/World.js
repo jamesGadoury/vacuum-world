@@ -1,4 +1,5 @@
 import React from 'react';
+import { Actions, ActionString } from './Actions';
 
 function selectRandomCell(gridSize) {
    return Math.floor(Math.random() * gridSize);
@@ -19,7 +20,13 @@ class Cell {
 class World extends React.Component {
    constructor(props) {
       super(props);
-      this.state = {numRows: props.numRows, numCols: props.numCols, world: this.initWorld(props.numRows, props.numCols), getRobotAction: props.robot};
+      this.state = {
+         numRows: props.numRows, 
+         numCols: props.numCols, 
+         world: this.initWorld(props.numRows, props.numCols), 
+         getRobotAction: props.robot,
+         robotActionStr: ""
+      };
       this.setSimStyleProperties(props.numRows, props.numCols)
    }
  
@@ -58,38 +65,40 @@ class World extends React.Component {
    }
 
    processRobotAction() {
-      let world = this.state.world;
-      let grid = world.grid;
-      let pos = world.robotPosition;
-      let idx = getFlattenedIdx(pos.x, pos.y, this.state.numCols);
-      let action = this.state.getRobotAction(grid, idx);
+      let world  = this.state.world;
+      let grid   = world.grid;
+      let pos    = world.robotPosition;
+      let robotIdx    = getFlattenedIdx(pos.x, pos.y, this.state.numCols);
+      let action = this.state.getRobotAction(grid, robotIdx);
 
-      if (action === "CLEAN") {
-         grid[idx].dirtPresent = false;
+      if (action === Actions.CLEAN) {
+         grid[robotIdx].dirtPresent = false;
       }
       else {
-         grid[idx].vacuumPresent = false;
-         if (action === "LEFT" && pos.x > 0) {
-         pos.x--;
+         grid[robotIdx].vacuumPresent = false;
+         if (action === Actions.LEFT && pos.x > 0) {
+            pos.x--;
          }
-         else if (action === "RIGHT" && pos.x < this.state.numCols-1) {
-         pos.x++;
+         else if (action === Actions.RIGHT && pos.x < this.state.numCols-1) {
+            pos.x++;
          }
-         else if (action === "UP" && pos.y > 0) {
-         pos.y--;
+         else if (action === Actions.UP && pos.y > 0) {
+            pos.y--;
          }
-         else if (action === "DOWN" && pos.y < this.state.numRows-1) {
-         pos.y++;
+         else if (action === Actions.DOWN && pos.y < this.state.numRows-1) {
+            pos.y++;
          }
          grid[getFlattenedIdx(pos.x, pos.y, this.state.numCols)].vacuumPresent = true;
       }
       
-      return {grid: grid, robotPosition: pos};
+      return {world: { grid: grid, robotPosition: pos }, action: action};
    }
  
    stepSimulation() {
+      let {world, action} = this.processRobotAction();
       this.setState({
-         world:this.processRobotAction()
+         world:world,
+         robotActionStr:ActionString(action),
       });
    }
  
@@ -108,13 +117,13 @@ class World extends React.Component {
       if (dirtPresent) {
          return (
          <div className='sim-cell' style={{'background-color':'SaddleBrown'}}>
-            <div className='vacuum'></div>
+            <div className='vacuum'>{this.state.robotActionStr}</div>
          </div>
          )
       }
       return (
          <div className='sim-cell' style={{'background-color':'Cornsilk'}}>
-         <div className='vacuum'></div>
+         <div className='vacuum'>{this.state.robotActionStr}</div>
          </div>
       )
    }
@@ -122,13 +131,13 @@ class World extends React.Component {
    render() {
       return (
          this.state.world.grid.map((cell) => {
-         if (cell.vacuumPresent) {
-            return this.renderVacuum(cell.dirtPresent);
-         }
-         if (cell.dirtPresent) {
-            return <div className='sim-cell' style={{'background-color':'SaddleBrown'}}></div>;
-         }
-         return <div className='sim-cell' style={{'background-color':'Cornsilk'}}></div>
+            if (cell.vacuumPresent) {
+               return this.renderVacuum(cell.dirtPresent);
+            }
+            if (cell.dirtPresent) {
+               return <div className='sim-cell' style={{'background-color':'SaddleBrown'}}></div>;
+            }
+            return <div className='sim-cell' style={{'background-color':'Cornsilk'}}></div>
          })
       );
    }

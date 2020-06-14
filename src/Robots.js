@@ -1,15 +1,17 @@
+import {Actions, ActionString} from './Actions';
+
 function DumbBot(grid, robotIdx) {
  
       if (grid[robotIdx].dirtPresent) {
-         console.log("CLEAN");
-         return "CLEAN";
+         console.log(ActionString(Actions.CLEAN));
+         return Actions.CLEAN;
       }
       if (robotIdx === 0) {
-         console.log("RIGHT");
-         return "RIGHT";
+         console.log(ActionString(Actions.RIGHT));
+         return Actions.RIGHT;
       }
-      console.log("LEFT");
-      return "LEFT";
+      console.log(ActionString(Actions.LEFT));
+      return Actions.LEFT;
 }
 
 export { DumbBot };
