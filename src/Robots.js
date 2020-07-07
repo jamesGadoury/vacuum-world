@@ -1,30 +1,47 @@
-import {Actions, ActionString} from './Actions';
+import {Actions} from './Actions';
+
+class RandomBot {
+   nextAction(world) {
+      let nextAction = "";
+      if (world.robotCell().dirtPresent) {
+         nextAction = "CLEAN";
+      }
+      else {
+         nextAction = this.randomMovement();
+      }
+      console.log(`Robot sent ${nextAction}`);
+      return nextAction;
+   }
+   randomMovement() {
+      return Actions[Math.floor(Math.random() * Math.floor(Actions.length-1) + 1)];
+   }
+}
 
 class DumbBot {
    constructor() {
       this.memory = [];
    }
    nextAction(world) {
-      let nextAction;
+      let nextAction = "";
       if (world.robotCell().dirtPresent) {
-         nextAction = Actions.CLEAN;
+         nextAction = "CLEAN";
       }
       else {
-         if (this.lastAction() === Actions.LEFT) {
+         if (this.lastAction() === "LEFT") {
             if (world.robotPosition.x > 0) {
-               nextAction = Actions.LEFT;
+               nextAction = "LEFT";
             } else {
-               nextAction = Actions.RIGHT;
+               nextAction = "RIGHT";
             }
          } else {
             if (world.robotPosition.x < world.numCols-1) {
-               nextAction = Actions.RIGHT;
+               nextAction = "RIGHT";
             } else {
-               nextAction = Actions.LEFT;
+               nextAction = "LEFT";
             }
          }
       }
-      console.log(ActionString(nextAction));
+      console.log(`Robot sent ${nextAction}`);
       this.memory.push(nextAction);
       return nextAction;
    }
@@ -33,4 +50,4 @@ class DumbBot {
    }
 }
 
-export { DumbBot };
+export { DumbBot, RandomBot };

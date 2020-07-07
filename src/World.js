@@ -1,5 +1,3 @@
-import {Actions} from './Actions';
-
 function selectRandomCell(gridSize) {
    return Math.floor(Math.random() * gridSize);
 }
@@ -40,21 +38,21 @@ function updateWorld(world, robotAction) {
    let numRows  = world.numRows;
    let numCols  = world.numCols;
 
-   if (robotAction === Actions.CLEAN) {
+   if (robotAction === "CLEAN") {
       grid[robotIdx].dirtPresent = false;
    }
    else {
       grid[robotIdx].vacuumPresent = false;
-      if (robotAction === Actions.LEFT && pos.x > 0) {
+      if (robotAction === "LEFT" && pos.x > 0) {
          pos.x--;
       }
-      else if (robotAction === Actions.RIGHT && pos.x < numCols-1) {
+      else if (robotAction === "RIGHT" && pos.x < numCols-1) {
          pos.x++;
       }
-      else if (robotAction === Actions.UP && pos.y > 0) {
+      else if (robotAction === "UP" && pos.y > 0) {
          pos.y--;
       }
-      else if (robotAction === Actions.DOWN && pos.y < numRows-1) {
+      else if (robotAction === "DOWN" && pos.y < numRows-1) {
          pos.y++;
       }
       grid[getFlattenedIdx(pos.x, pos.y, numCols)].vacuumPresent = true;

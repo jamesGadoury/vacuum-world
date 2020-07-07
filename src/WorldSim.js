@@ -1,6 +1,6 @@
 import React from 'react';
 import {initWorld, updateWorld} from './World';
-import { ActionString } from './Actions';
+import { Actions } from './Actions';
 
 class WorldSim extends React.Component {
    constructor(props) {
@@ -17,9 +17,11 @@ class WorldSim extends React.Component {
  
    stepSimulation() {
       let action = this.state.robot.nextAction(this.state.world);
+      if (Actions.indexOf(action) === -1)
+         console.log(`${action} is not a valid action.`);
       this.setState({
          world: updateWorld(this.state.world, action),
-         robotActionStr:ActionString(action),
+         robotActionStr:action,
       });
    }
  
@@ -40,7 +42,7 @@ class WorldSim extends React.Component {
          <div className='vacuum'><p className='action'>{this.state.robotActionStr}</p></div>
          )
       }
-      return "";
+      return;
    }
 
    renderCell(cell) {

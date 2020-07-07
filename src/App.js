@@ -1,6 +1,6 @@
 import React from 'react';
 import WorldSim from './WorldSim';
-import { DumbBot } from './Robots';
+import { DumbBot, RandomBot } from './Robots';
 
 import './App.css';
 
@@ -10,7 +10,7 @@ function App() {
       <div className="App-header">
         <h1>Vacuum World</h1>
         
-        <WorldSim numRows={3} numCols={6} robot={new DumbBot()}/>
+        <WorldSim numRows={3} numCols={6} robot={new RandomBot()}/>
 
       </div>     
     </div>
