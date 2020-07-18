@@ -1,7 +1,5 @@
 import React from 'react';
-import WorldSim from './WorldSim';
-import { DumbBot, RandomBot } from './Robots';
-
+import SimManager from './SimManager';
 import './App.css';
 
 function App() {
@@ -9,9 +7,7 @@ function App() {
     <div className="App">
       <div className="App-header">
         <h1>Vacuum World</h1>
-        
-        <WorldSim numRows={3} numCols={6} robot={new RandomBot()}/>
-
+        <SimManager />       
       </div>     
     </div>
   );
