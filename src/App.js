@@ -7,7 +7,7 @@ function App() {
     <div className="App">
       <div className="App-header">
         <h1>Vacuum World</h1>
-        <SimManager />       
+        <SimManager numRows={3} numCols={3}/>       
       </div>     
     </div>
   );

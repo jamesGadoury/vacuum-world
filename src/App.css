@@ -82,6 +82,11 @@ h1 {
   margin-bottom: 50px;
 }
 
+.manager-button {
+  font-size: 20px;
+  border-radius: 12px;
+}
+
 .sim-cell {
   grid-column-start: auto;
   grid-row-start: auto;

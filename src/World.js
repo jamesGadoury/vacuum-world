@@ -25,6 +25,7 @@ function initGrid(numRows, numCols) {
 }
 
 function initWorld(numRows, numCols) {
+   console.log(numRows, numCols);
    let world = new World(numRows, numCols, initGrid(numRows, numCols), {x: selectRandomCell(numCols), y: selectRandomCell(numRows)});
    world.grid[world.robotIdx()].vacuumPresent = true;
    world.markRandomSpotsWithDirt();
