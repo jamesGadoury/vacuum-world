@@ -8,11 +8,12 @@ class WorldSim extends React.Component {
       this.state = {
          world: props.world,
          robot: props.robot,
-         robotActionStr: ""
+         robotActionStr: "",
       };
    }
  
    stepSimulation() {
+      console.log("step");
       let action = this.state.robot.nextAction(this.state.world);
       if (Actions.indexOf(action) === -1)
          console.log(`${action} is not a valid action.`);
@@ -27,14 +28,22 @@ class WorldSim extends React.Component {
          1000
       );
    }
+   startTimer() {
+      this.timerId = this.timer();
+   }
+   stopTimer() {
+      clearInterval(this.timerId);
+   }
  
    componentDidMount() {
-      this.timerId = this.timer();
+      console.log("mounted");
+      this.startTimer();
    }
 
    componentDidUpdate(prevProps) {
       let updatedState = false;
       if (this.props.world !== prevProps.world) {
+         console.log("world changed.");
          this.setState({
             world: this.props.world
          });
@@ -48,12 +57,14 @@ class WorldSim extends React.Component {
          updatedState = true;
       }
       if (updatedState) {
-         this.setState({timerId: this.timer()});
+         console.log("timer updated.");
+         this.stopTimer();
+         this.startTimer();
       }
    }
  
    componentWillUnmount() {
-      clearInterval(this.timerId);
+      this.stopTimer();
    }
  
    renderVacuum(cell) {
