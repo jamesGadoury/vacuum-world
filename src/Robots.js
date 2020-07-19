@@ -1,6 +1,9 @@
 import {Actions} from './Actions';
 
 class RandomBot {
+   constructor() {
+      console.log("Random bot created");
+   }
    nextAction(world) {
       let nextAction = "";
       if (world.robotCell().dirtPresent) {
@@ -20,6 +23,7 @@ class RandomBot {
 class DumbBot {
    constructor() {
       this.memory = [];
+      console.log("Dumb bot created");
    }
    nextAction(world) {
       let nextAction = "";
@@ -50,4 +54,16 @@ class DumbBot {
    }
 }
 
-export { DumbBot, RandomBot };
+const RobotTypes = ["DumbBot", "RandomBot"];
+
+let CreateRobot = (RobotType) => {
+   if (RobotType === "DumbBot") {
+      return new DumbBot();
+   } 
+   if (RobotType === "RandomBot") {
+      return new RandomBot();
+   }
+   console.log("Bad Robot Type.");
+}
+
+export { RobotTypes, CreateRobot };

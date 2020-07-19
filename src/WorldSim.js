@@ -21,24 +21,34 @@ class WorldSim extends React.Component {
          robotActionStr:action,
       });
    }
- 
-   componentDidMount() {
-      this.timerId = setInterval(
+   timer() {
+      return setInterval(
          () => this.stepSimulation(),
          1000
       );
    }
+ 
+   componentDidMount() {
+      this.timerId = this.timer();
+   }
 
    componentDidUpdate(prevProps) {
+      let updatedState = false;
       if (this.props.world !== prevProps.world) {
          this.setState({
             world: this.props.world
          });
+         updatedState = true;
       }
       if (this.props.robot !== prevProps.robot) {
+         console.log(this.props.robot);
          this.setState({
             robot: this.props.robot
          });
+         updatedState = true;
+      }
+      if (updatedState) {
+         this.setState({timerId: this.timer()});
       }
    }
  
