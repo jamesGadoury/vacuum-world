@@ -17,6 +17,8 @@ class SimManager extends React.Component {
       this.updateProperties(props.numRows, props.numCols);
       this.resetWorld = this.resetWorld.bind(this);
       this.handleRobotChange = this.handleRobotChange.bind(this);
+      this.handleRowChange = this.handleRowChange.bind(this);
+      this.handleColChange = this.handleColChange.bind(this);
    }
    componentDidMount() {
    }
@@ -29,15 +31,24 @@ class SimManager extends React.Component {
       document.documentElement.style.setProperty("--numCols", numCols);
       document.documentElement.style.setProperty("--colWidth", 100 / numCols + "%");
    }
+   componentDidUpdate(prevProps, prevState) {
+      if (this.state.numRows !== prevState.numRows || this.state.numCols !== prevState.numCols) {
+         this.updateProperties(this.state.numRows, this.state.numCols);
+         this.resetWorld();
+      }
+   }
 
    resetWorld() {
-      console.log("reset world called");
       this.setState({world: initWorld(this.state.numRows, this.state.numCols)});
    }
    handleRobotChange(event) {
-      console.log("robot changed");
-      console.log(event.target.value);
       this.setState({robotType: event.target.value, robot: CreateRobot(event.target.value)});
+   }
+   handleRowChange(event) {
+      this.setState({numRows: event.target.value});
+   }
+   handleColChange(event) {
+      this.setState({numCols: event.target.value});
    }
    renderRobotTypeOption(type) {
       return <option value={type}>{type}</option>;
@@ -45,14 +56,33 @@ class SimManager extends React.Component {
    renderRobotSelection() {
       return (
          <select value={this.state.robotType} onChange={this.handleRobotChange}>  
-         {RobotTypes.map((type) => this.renderRobotTypeOption(type))}          
+            {RobotTypes.map((type) => this.renderRobotTypeOption(type))}          
          </select>   
        );
+   }
+   renderNumberSelection(num) {
+      return <option value={num}>{num}</option>
+   }
+   renderRowSelection() {
+      return (
+         <select value={this.state.numRows} onChange={this.handleRowChange}>
+            {[1,2,3,4,5,6].map((num) => this.renderNumberSelection(num))}
+         </select>
+      );
+   }
+   renderColSelection() {
+      return (
+         <select value={this.state.numCols} onChange={this.handleColChange}>
+            {[1,2,3,4,5,6].map((num) => this.renderNumberSelection(num))}
+         </select>
+      );
    }
    renderManagerPane() {
       return (
          <div class='div-pane'>
             {this.renderRobotSelection()}
+            {this.renderRowSelection()}
+            {this.renderColSelection()}
             <button onClick={this.resetWorld} class='manager-button'>RESET</button>
          </div>
       );
