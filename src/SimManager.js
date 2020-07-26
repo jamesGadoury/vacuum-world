@@ -11,7 +11,8 @@ class SimManager extends React.Component {
          robotType: RobotTypes[0],
          robot: CreateRobot(RobotTypes[0]),
          numRows: props.numRows,
-         numCols: props.numCols
+         numCols: props.numCols,
+         runningSim: true
       };
 
       this.updateProperties(props.numRows, props.numCols);
@@ -19,6 +20,8 @@ class SimManager extends React.Component {
       this.handleRobotChange = this.handleRobotChange.bind(this);
       this.handleRowChange = this.handleRowChange.bind(this);
       this.handleColChange = this.handleColChange.bind(this);
+      this.stopWorld = this.stopWorld.bind(this);
+      this.startWorld = this.startWorld.bind(this);
    }
    componentDidMount() {
    }
@@ -77,12 +80,29 @@ class SimManager extends React.Component {
          </select>
       );
    }
+   stopWorld() {
+      this.setState({runningSim: false});
+   }
+   startWorld() {
+      this.setState({runningSim: true});
+   }
+   renderStartStopButton() {
+      if (this.state.runningSim) {
+         return (
+            <button onClick={this.stopWorld} class='manager-button'>Stop</button>
+         );
+      }
+      return (
+         <button onClick={this.startWorld} class='manager-button'>Start</button>
+      );
+   }
    renderManagerPane() {
       return (
          <div class='div-pane'>
             {this.renderRobotSelection()}
             {this.renderRowSelection()}
             {this.renderColSelection()}
+            {this.renderStartStopButton()}
             <button onClick={this.resetWorld} class='manager-button'>RESET</button>
          </div>
       );
@@ -90,7 +110,7 @@ class SimManager extends React.Component {
 
    renderWorld() {
       return (
-         <WorldSim robot={this.state.robot} world={this.state.world}/>
+         <WorldSim robot={this.state.robot} world={this.state.world} runningSim={this.state.runningSim}/>
       );
    }
 

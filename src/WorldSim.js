@@ -8,7 +8,7 @@ class WorldSim extends React.Component {
       this.state = {
          world: props.world,
          robot: props.robot,
-         robotActionStr: "",
+         robotActionStr: ""
       };
    }
  
@@ -56,10 +56,17 @@ class WorldSim extends React.Component {
          });
          updatedState = true;
       }
-      if (updatedState) {
+      if (updatedState && this.props.runningSim) {
          console.log("timer updated.");
          this.stopTimer();
          this.startTimer();
+      }
+      if (this.props.runningSim !== prevProps.runningSim) {
+         if (this.props.runningSim) {
+            this.startTimer();
+         } else {
+            this.stopTimer();
+         }
       }
    }
  
