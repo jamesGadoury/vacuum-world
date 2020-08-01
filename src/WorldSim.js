@@ -1,6 +1,7 @@
 import React from 'react';
 import {updateWorld} from './World';
 import { Actions } from './Actions';
+import { UniqueKeyGenerator } from './Utilities';
 
 class WorldSim extends React.Component {
    constructor(props) {
@@ -8,12 +9,12 @@ class WorldSim extends React.Component {
       this.state = {
          world: props.world,
          robot: props.robot,
-         robotActionStr: ""
+         robotActionStr: "",
+         keyGen: new UniqueKeyGenerator()
       };
    }
  
    stepSimulation() {
-      console.log("step");
       let action = this.state.robot.nextAction(this.state.world);
       if (Actions.indexOf(action) === -1)
          console.log(`${action} is not a valid action.`);
@@ -36,28 +37,24 @@ class WorldSim extends React.Component {
    }
  
    componentDidMount() {
-      console.log("mounted");
       this.startTimer();
    }
 
    componentDidUpdate(prevProps) {
       let updatedState = false;
       if (this.props.world !== prevProps.world) {
-         console.log("world changed.");
          this.setState({
             world: this.props.world
          });
          updatedState = true;
       }
       if (this.props.robot !== prevProps.robot) {
-         console.log(this.props.robot);
          this.setState({
             robot: this.props.robot
          });
          updatedState = true;
       }
       if (updatedState && this.props.runningSim) {
-         console.log("timer updated.");
          this.stopTimer();
          this.startTimer();
       }
@@ -85,9 +82,9 @@ class WorldSim extends React.Component {
 
    renderCell(cell) {
       if (cell.dirtPresent) {
-         return <div className='sim-cell' style={{'background-color':'SaddleBrown'}}>{this.renderVacuum(cell)}</div>;
+         return <div className='sim-cell' style={{'backgroundColor':'SaddleBrown'}} key={this.state.keyGen.key()}>{this.renderVacuum(cell)}</div>;
       }
-      return <div className='sim-cell' style={{'background-color':'Cornsilk'}}>{this.renderVacuum(cell)}</div>
+      return <div className='sim-cell' style={{'backgroundColor':'Cornsilk'}} key={this.state.keyGen.key()}>{this.renderVacuum(cell)}</div>
    }
 
    renderCells() {

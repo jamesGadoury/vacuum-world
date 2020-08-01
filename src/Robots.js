@@ -1,9 +1,6 @@
 import {Actions} from './Actions';
 
 class RandomBot {
-   constructor() {
-      console.log("Random bot created");
-   }
    nextAction(world) {
       let nextAction = "";
       if (world.robotCell().dirtPresent) {
@@ -12,7 +9,6 @@ class RandomBot {
       else {
          nextAction = this.randomMovement();
       }
-      console.log(`Robot sent ${nextAction}`);
       return nextAction;
    }
    randomMovement() {
@@ -23,7 +19,6 @@ class RandomBot {
 class DumbBot {
    constructor() {
       this.memory = [];
-      console.log("Dumb bot created");
    }
    nextAction(world) {
       let nextAction = "";
@@ -45,7 +40,6 @@ class DumbBot {
             }
          }
       }
-      console.log(`Robot sent ${nextAction}`);
       this.memory.push(nextAction);
       return nextAction;
    }
