@@ -1,3 +1,5 @@
+// hello world
+
 function selectRandomCell(gridSize) {
    return Math.floor(Math.random() * gridSize);
 }
