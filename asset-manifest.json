@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/vacuum_world/static/css/main.dd21dbee.chunk.css",
+    "main.js": "/vacuum_world/static/js/main.f2cad6f2.chunk.js",
+    "main.js.map": "/vacuum_world/static/js/main.f2cad6f2.chunk.js.map",
+    "runtime-main.js": "/vacuum_world/static/js/runtime-main.b74311e6.js",
+    "runtime-main.js.map": "/vacuum_world/static/js/runtime-main.b74311e6.js.map",
+    "static/js/2.84866ae6.chunk.js": "/vacuum_world/static/js/2.84866ae6.chunk.js",
+    "static/js/2.84866ae6.chunk.js.map": "/vacuum_world/static/js/2.84866ae6.chunk.js.map",
+    "index.html": "/vacuum_world/index.html",
+    "static/css/main.dd21dbee.chunk.css.map": "/vacuum_world/static/css/main.dd21dbee.chunk.css.map",
+    "static/js/2.84866ae6.chunk.js.LICENSE.txt": "/vacuum_world/static/js/2.84866ae6.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b74311e6.js",
+    "static/js/2.84866ae6.chunk.js",
+    "static/css/main.dd21dbee.chunk.css",
+    "static/js/main.f2cad6f2.chunk.js"
+  ]
+}
