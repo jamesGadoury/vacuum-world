@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/vacuum_world/static/css/main.dd21dbee.chunk.css",
-    "main.js": "/vacuum_world/static/js/main.f2cad6f2.chunk.js",
-    "main.js.map": "/vacuum_world/static/js/main.f2cad6f2.chunk.js.map",
-    "runtime-main.js": "/vacuum_world/static/js/runtime-main.b74311e6.js",
-    "runtime-main.js.map": "/vacuum_world/static/js/runtime-main.b74311e6.js.map",
-    "static/js/2.84866ae6.chunk.js": "/vacuum_world/static/js/2.84866ae6.chunk.js",
-    "static/js/2.84866ae6.chunk.js.map": "/vacuum_world/static/js/2.84866ae6.chunk.js.map",
-    "index.html": "/vacuum_world/index.html",
-    "static/css/main.dd21dbee.chunk.css.map": "/vacuum_world/static/css/main.dd21dbee.chunk.css.map",
-    "static/js/2.84866ae6.chunk.js.LICENSE.txt": "/vacuum_world/static/js/2.84866ae6.chunk.js.LICENSE.txt"
+    "main.css": "/vacuum-world/static/css/main.dd21dbee.chunk.css",
+    "main.js": "/vacuum-world/static/js/main.468e1d68.chunk.js",
+    "main.js.map": "/vacuum-world/static/js/main.468e1d68.chunk.js.map",
+    "runtime-main.js": "/vacuum-world/static/js/runtime-main.16ef4563.js",
+    "runtime-main.js.map": "/vacuum-world/static/js/runtime-main.16ef4563.js.map",
+    "static/js/2.84866ae6.chunk.js": "/vacuum-world/static/js/2.84866ae6.chunk.js",
+    "static/js/2.84866ae6.chunk.js.map": "/vacuum-world/static/js/2.84866ae6.chunk.js.map",
+    "index.html": "/vacuum-world/index.html",
+    "static/css/main.dd21dbee.chunk.css.map": "/vacuum-world/static/css/main.dd21dbee.chunk.css.map",
+    "static/js/2.84866ae6.chunk.js.LICENSE.txt": "/vacuum-world/static/js/2.84866ae6.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.b74311e6.js",
+    "static/js/runtime-main.16ef4563.js",
     "static/js/2.84866ae6.chunk.js",
     "static/css/main.dd21dbee.chunk.css",
-    "static/js/main.f2cad6f2.chunk.js"
+    "static/js/main.468e1d68.chunk.js"
   ]
 }
