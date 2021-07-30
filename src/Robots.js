@@ -19,7 +19,7 @@ class BreadthFirstSearchBot { // Breadth First Search Bot
 
    breadthFirstSearch(world) {
       // initialize root node w/ state = world
-      let node = {state: world.copy(), parent: null, action: null};
+      let node = {state: world, parent: null, action: null};
       if (node.state.robotOnDirt()) {
          // on goal already
          return [];
@@ -53,10 +53,10 @@ class BreadthFirstSearchBot { // Breadth First Search Bot
    expand(world, node) {
       let children = [];
       for (let action of ["LEFT", "RIGHT", "UP", "DOWN"]) {
-         let newWorld = updateWorld(world.copy(), action);
+         let newWorld = updateWorld(world, action);
          if (world.robotIdx() !== newWorld.robotIdx()) {
             // this is a valid action, append list with this node
-            children.push({state: newWorld.copy(), parent: node, action: action});
+            children.push({state: newWorld, parent: node, action: action});
          }
       }
 

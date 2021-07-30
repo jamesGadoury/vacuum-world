@@ -36,9 +36,9 @@ function initWorld(numRows, numCols) {
 function updateWorld(world, robotAction) {
    let grid     = world.grid.map(a => Object.assign({}, a));
    let pos      = { ...world.robotPosition };
-   let robotIdx = world.copy().robotIdx();
-   let numRows  = world.copy().numRows;
-   let numCols  = world.copy().numCols;
+   let robotIdx = world.robotIdx();
+   let numRows  = world.numRows;
+   let numCols  = world.numCols;
 
    if (robotAction === "CLEAN") {
       grid[robotIdx].dirtPresent = false;
@@ -92,10 +92,6 @@ class World {
 
    robotCell() {
       return this.grid[this.robotIdx()];
-   }
-
-   copy() {
-      return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
    }
 
    robotOnDirt() {
