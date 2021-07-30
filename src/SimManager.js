@@ -20,12 +20,6 @@ class SimManager extends React.Component {
       this.updateProperties(props.numRows, props.numCols);
    }
 
-   componentDidMount() {
-   }
- 
-   componentWillUnmount() {
-   }
-
    updateProperties(numRows, numCols) {
       document.documentElement.style.setProperty("--numRows", numRows);
       document.documentElement.style.setProperty("--numCols", numCols);

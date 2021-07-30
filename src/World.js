@@ -34,11 +34,11 @@ function initWorld(numRows, numCols) {
 }
 
 function updateWorld(world, robotAction) {
-   let grid     = world.grid;
-   let pos      = world.robotPosition;
-   let robotIdx = world.robotIdx();
-   let numRows  = world.numRows;
-   let numCols  = world.numCols;
+   let grid     = world.grid.map(a => Object.assign({}, a));
+   let pos      = { ...world.robotPosition };
+   let robotIdx = world.copy().robotIdx();
+   let numRows  = world.copy().numRows;
+   let numCols  = world.copy().numCols;
 
    if (robotAction === "CLEAN") {
       grid[robotIdx].dirtPresent = false;
@@ -46,16 +46,16 @@ function updateWorld(world, robotAction) {
    else {
       grid[robotIdx].vacuumPresent = false;
       if (robotAction === "LEFT" && pos.x > 0) {
-         pos.x--;
+         pos.x = pos.x-1;
       }
       else if (robotAction === "RIGHT" && pos.x < numCols-1) {
-         pos.x++;
+         pos.x = pos.x+1;
       }
       else if (robotAction === "UP" && pos.y > 0) {
-         pos.y--;
+         pos.y = pos.y-1;
       }
       else if (robotAction === "DOWN" && pos.y < numRows-1) {
-         pos.y++;
+         pos.y = pos.y+1;
       }
       grid[getFlattenedIdx(pos.x, pos.y, numCols)].vacuumPresent = true;
    }
@@ -92,6 +92,14 @@ class World {
 
    robotCell() {
       return this.grid[this.robotIdx()];
+   }
+
+   copy() {
+      return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
+   }
+
+   robotOnDirt() {
+      return this.robotCell().dirtPresent;
    }
 }
 
