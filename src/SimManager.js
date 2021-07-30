@@ -18,13 +18,8 @@ class SimManager extends React.Component {
       };
 
       this.updateProperties(props.numRows, props.numCols);
-      this.resetWorld = this.resetWorld.bind(this);
-      this.handleRobotChange = this.handleRobotChange.bind(this);
-      this.handleRowChange = this.handleRowChange.bind(this);
-      this.handleColChange = this.handleColChange.bind(this);
-      this.stopWorld = this.stopWorld.bind(this);
-      this.startWorld = this.startWorld.bind(this);
    }
+
    componentDidMount() {
    }
  
@@ -43,21 +38,34 @@ class SimManager extends React.Component {
       }
    }
 
-   resetWorld() {
+   resetWorld = () => {
       this.setState({world: initWorld(this.state.numRows, this.state.numCols)});
    }
-   handleRobotChange(event) {
+
+   handleRobotChange = (event) => {
       this.setState({robotType: event.target.value, robot: CreateRobot(event.target.value)});
    }
-   handleRowChange(event) {
+
+   handleRowChange = (event) => {
       this.setState({numRows: event.target.value});
    }
-   handleColChange(event) {
+
+   handleColChange = (event) => {
       this.setState({numCols: event.target.value});
    }
+
+   stopWorld = () => {
+      this.setState({runningSim: false});
+   }
+
+   startWorld = () => {
+      this.setState({runningSim: true});
+   }
+
    renderRobotTypeOption(type) {
       return <option value={type} key={this.state.keyGen.key()}>{type}</option>;
    }
+
    renderRobotSelection() {
       return (
          <select className='manager-button' value={this.state.robotType} onChange={this.handleRobotChange}>  
@@ -65,9 +73,11 @@ class SimManager extends React.Component {
          </select>   
        );
    }
+
    renderNumberSelection(num) {
       return <option value={num} key={this.state.keyGen.key()}>{num}</option>
    }
+
    renderRowSelection() {
       return (
          <select className='manager-button' value={this.state.numRows} onChange={this.handleRowChange}>
@@ -75,6 +85,7 @@ class SimManager extends React.Component {
          </select>
       );
    }
+
    renderColSelection() {
       return (
          <select className='manager-button' value={this.state.numCols} onChange={this.handleColChange}>
@@ -82,12 +93,8 @@ class SimManager extends React.Component {
          </select>
       );
    }
-   stopWorld() {
-      this.setState({runningSim: false});
-   }
-   startWorld() {
-      this.setState({runningSim: true});
-   }
+
+
    renderStartStopButton() {
       if (this.state.runningSim) {
          return (
@@ -98,6 +105,7 @@ class SimManager extends React.Component {
          <button onClick={this.startWorld} className='manager-button'>Start</button>
       );
    }
+
    renderManagerPane() {
       return (
          <div className='div-pane'>
