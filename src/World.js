@@ -7,44 +7,79 @@ function SelectRandomCell(gridSize) {
 function GetFlattenedIdx(x, y, numCols) {
    return y*numCols+x;
 }
- 
-class Cell {
-   constructor(x,y,vacuumPresent, dirtPresent) {
-      this.position = {x:x, y:y};
-      this.vacuumPresent = vacuumPresent;
-      this.dirtPresent   = dirtPresent; 
-   }
+
+function GetPositionFromIdxInWorld(idx, world) {
+   return {x: idx % world.numCols, y: Math.floor(idx / world.numCols)}   
 }
 
-function InitGrid(numRows, numCols) {
-   let grid = [];
-   for (let i = 0; i < numRows; ++i) {
-      for (let j = 0; j < numCols; ++j) {
-         grid[GetFlattenedIdx(j,i,numCols)] = new Cell(j, i, false, false);
-      }
+const VACUUM = "_";
+const DIRT = "*";
+
+function WorldSize(world) {
+   return world.numRows*world.numCols;
+}
+
+function RandomWorldIdx(world) {
+   return SelectRandomCell(WorldSize(world));
+}
+
+function MarkRandomSpotsWithDirt(world) {
+   let dirtyWorld = Object.assign({}, world);
+   let randomPickCount = Math.floor(WorldSize(dirtyWorld) / 2);
+   for (let _ = 0; _ < randomPickCount; ++_) {
+      let randomIdx = RandomWorldIdx(dirtyWorld);
+      dirtyWorld.grid[randomIdx] = dirtyWorld.grid[randomIdx] + DIRT; 
    }
-   return grid;
+   return dirtyWorld;
 }
 
 function InitWorld(numRows, numCols) {
-   let world = new World(numRows, numCols, InitGrid(numRows, numCols), {x: SelectRandomCell(numCols), y: SelectRandomCell(numRows)});
-   world.grid[world.robotIdx()].vacuumPresent = true;
-   world.markRandomSpotsWithDirt();
+   let world = {numRows: numRows, numCols: numCols, grid: Array(numRows*numCols).fill("")};
+   let robotIdx = RandomWorldIdx(world);
+   world.grid[robotIdx] = VACUUM;
+   world = MarkRandomSpotsWithDirt(world);
    return world;
 }
 
+function DirtPresentInCell(cell) {
+   return cell.includes(DIRT);
+}
+
+function RobotPresentInCell(cell) {
+   return cell.includes(VACUUM);
+}
+
+function RobotIdxInWorld(world) {
+   for (const [index, cell] of world.grid.entries()) {
+      if (RobotPresentInCell(cell)) {
+         return index;
+      }
+   }
+   return null;
+}
+
+function RobotOnDirt(world) {
+   const robotIdx  = RobotIdxInWorld(world);
+   const robotCell = world.grid[robotIdx];
+   return DirtPresentInCell(robotCell);
+}
+
+function RobotPositionInWorld(world) {
+   return GetPositionFromIdxInWorld(RobotIdxInWorld(world), world);
+}
+
 function UpdateWorld(world, robotAction) {
-   let grid     = world.grid.map(a => Object.assign({}, a));
-   let pos      = { ...world.robotPosition };
-   let robotIdx = world.robotIdx();
+   let grid     = world.grid.slice();
+   let robotIdx = RobotIdxInWorld(world);
+   let pos      = RobotPositionInWorld(world);
    let numRows  = world.numRows;
    let numCols  = world.numCols;
 
    if (robotAction === "CLEAN") {
-      grid[robotIdx].dirtPresent = false;
+      grid[robotIdx] = grid[robotIdx].replace(DIRT, '');
    }
    else {
-      grid[robotIdx].vacuumPresent = false;
+      grid[robotIdx] = grid[robotIdx].replace(VACUUM, '');
       if (robotAction === "LEFT" && pos.x > 0) {
          pos.x = pos.x-1;
       }
@@ -57,46 +92,11 @@ function UpdateWorld(world, robotAction) {
       else if (robotAction === "DOWN" && pos.y < numRows-1) {
          pos.y = pos.y+1;
       }
-      grid[GetFlattenedIdx(pos.x, pos.y, numCols)].vacuumPresent = true;
+      robotIdx = GetFlattenedIdx(pos.x, pos.y, numCols);
+      grid[robotIdx] = grid[robotIdx] + VACUUM;
    }
 
-   return new World(numRows, numCols, grid, pos);
+   return {numRows: world.numRows, numCols: world.numCols, grid: grid};
 }
 
-class World {
-   constructor(numRows, numCols, grid, robotPos) {
-      this.numRows       = numRows;
-      this.numCols       = numCols;
-      this.grid          = grid;
-      this.robotPosition = robotPos;
-   }
-
-   markRandomSpotsWithDirt() {
-      let randomPickCount = Math.floor(this.size() / 2);
-      for (let _ = 0; _ < randomPickCount; ++_) {
-         this.grid[this.randomIdx()].dirtPresent = true;
-      }
-   }
-
-   robotIdx() {
-      return GetFlattenedIdx(this.robotPosition.x, this.robotPosition.y, this.numCols);
-   }
-
-   size() {
-      return this.numRows*this.numCols;
-   }
-
-   randomIdx() {
-      return SelectRandomCell(this.size());
-   }
-
-   robotCell() {
-      return this.grid[this.robotIdx()];
-   }
-
-   robotOnDirt() {
-      return this.robotCell().dirtPresent;
-   }
-}
-
-export {InitWorld, UpdateWorld};
+export { InitWorld, UpdateWorld, DirtPresentInCell, RobotPresentInCell, RobotOnDirt, RobotIdxInWorld, RobotPositionInWorld};

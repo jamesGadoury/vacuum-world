@@ -1,11 +1,11 @@
 import {Actions} from './Actions';
-import {UpdateWorld} from './World';
+import {UpdateWorld, RobotOnDirt, RobotIdxInWorld, RobotPositionInWorld} from './World';
 
 const Expand = (world, node) => {
    let children = [];
    for (let action of ["LEFT", "RIGHT", "UP", "DOWN"]) {
       let newWorld = UpdateWorld(world, action);
-      if (world.robotIdx() !== newWorld.robotIdx()) {
+      if (RobotIdxInWorld(world) !== RobotIdxInWorld(newWorld)) {
          // this is a valid action, append list with this node
          children.push({state: newWorld, parent: node, action: action});
       }
@@ -29,7 +29,7 @@ const RetrieveActionsToNode = (child) => {
 const BreadthFirstSearch = (world) => {
    // initialize root node w/ state = world
    let node = {state: world, parent: null, action: null};
-   if (node.state.robotOnDirt()) {
+   if (RobotOnDirt(node.state)) {
       // on goal already
       return []; // todo instead of manually return empty and changing to clean; should prob just return "CLEAN"
    }
@@ -39,19 +39,19 @@ const BreadthFirstSearch = (world) => {
    // the world will only change in the scope of the robots position
    // in this current world model -> not really a correct representation
    // but I really, really just want to get this to work for now 
-   let reached = [ node.state.robotIdx() ];
+   let reached = [ RobotIdxInWorld(node.state) ];
 
    while (frontier.length !== 0) {
       node = frontier.shift(); // fifo like
       let children = Expand(node.state, node);
 
       for (let child of children) {
-         if (child.state.robotOnDirt()) {
+         if (RobotOnDirt(child.state)) {
             // on goal
             return RetrieveActionsToNode(child);
          }
-         if (!reached.includes(child.state.robotIdx())) {
-            reached.push(child.state.robotIdx());
+         if (!reached.includes(RobotIdxInWorld(child.state))) {
+            reached.push(RobotIdxInWorld(child.state));
             frontier.push(child);
          }
       }
@@ -79,7 +79,7 @@ const RandomMovement = () => {
 
 const RandomAgent = (world, memory) => {
    let nextAction = "";
-   if (world.robotCell().dirtPresent) {
+   if (RobotOnDirt(world)) {
       nextAction = "CLEAN";
    }
    else {
@@ -93,18 +93,19 @@ const DumbAgent = (world, memory) => {
       memory.lastAction = "";
    }
    let nextAction = "";
-   if (world.robotCell().dirtPresent) {
+   if (RobotOnDirt(world)) {
       nextAction = "CLEAN";
    }
    else {
+      let robotPosition = RobotPositionInWorld(world);
       if (memory.lastAction === "LEFT") {
-         if (world.robotPosition.x > 0) {
+         if (robotPosition.x > 0) {
             nextAction = "LEFT";
          } else {
             nextAction = "RIGHT";
          }
       } else {
-         if (world.robotPosition.x < world.numCols-1) {
+         if (robotPosition.x < world.numCols-1) {
             nextAction = "RIGHT";
          } else {
             nextAction = "LEFT";
