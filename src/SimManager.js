@@ -1,172 +1,134 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import WorldSim from './WorldSim';
 import {InitWorld, UpdateWorld} from './World';
 import { RobotTypes, CreateRobot } from './Robots';
 import { UniqueKeyGenerator } from './Utilities';
 import { Actions } from './Actions';
 
-class SimManager extends React.Component {
-   constructor(props) {
-      super(props);
-      this.state = {
-         world: InitWorld(props.numRows, props.numCols),
-         robot: CreateRobot(RobotTypes[0]),
-         numRows: props.numRows,
-         numCols: props.numCols,
-         runningSim: true,
-         keyGen: new UniqueKeyGenerator(),
-      };
+function SimManager(props) {
+   const [simState, setSimState] = useState({
+      world: InitWorld(props.numRows, props.numCols),
+      robot: CreateRobot(RobotTypes[0])
+   });
+   const [runningSim, setRunningSim] = useState(true);
 
-      this.updateProperties(props.numRows, props.numCols);
-   }
+   const keyGen = new UniqueKeyGenerator();
 
-   updateProperties(numRows, numCols) {
-      document.documentElement.style.setProperty("--numRows", numRows);
-      document.documentElement.style.setProperty("--numCols", numCols);
-      document.documentElement.style.setProperty("--colWidth", 100 / numCols + "%");
-   }
+   const timer = useRef();
 
-   stepSimulation = () => {
-      // make memory copy
-      let memoryCopy = Object.assign({}, this.state.robot.memory);
-      const {action, memory} = this.state.robot.agentFunction(this.state.world, memoryCopy);
-      if (Actions.indexOf(action) === -1)
-         console.log(`${action} is not a valid action.`);
-      this.setState({
-         world: UpdateWorld(this.state.world, action),
-         robot: {type: this.state.robot.type, agentFunction: this.state.robot.agentFunction, action: action, memory: memory}
-      });
-   }
-
-   timer() {
-      return setInterval(
-         () => this.stepSimulation(),
-         1000
-      );
-   }
-   startTimer() {
-      this.timerId = this.timer();
-   }
-   stopTimer() {
-      clearInterval(this.timerId);
-   }
- 
-   componentDidMount() {
-      this.startTimer();
-   }
-
-   componentDidUpdate(prevProps, prevState) {
-      if (this.state.runningSim !== prevState.runningSim) {
-         if (this.state.runningSim) {
-            this.startTimer();
-         } else {
-            this.stopTimer();
-         }
+   useEffect(() => {
+      if (runningSim) {
+         timer.current = setInterval(() => {
+            setSimState(prevSimState => {
+               let robot = prevSimState.robot;
+               let memoryCopy = Object.assign({}, robot.memory);
+               let world = prevSimState.world;
+               const {action, memory} = robot.agentFunction(world, memoryCopy);
+               if (Actions.indexOf(action) === -1) {
+                  console.log(`${action} is not a valid action.`);
+               }
+               return { 
+                  world: UpdateWorld(world, action),
+                  robot: {type: robot.type, agentFunction: robot.agentFunction, action: action, memory: memory}
+               };
+            })
+         }, 1000)
+      } else {
+         clearInterval(timer.current);
       }
-      if (this.state.numRows !== prevState.numRows || this.state.numCols !== prevState.numCols) {
-         this.updateProperties(this.state.numRows, this.state.numCols);
-         this.resetWorld();
-      }
-   }
- 
-   componentWillUnmount() {
-      this.stopTimer();
+   }, [runningSim]); 
+
+   const handleRobotChange = (event) => {
+      setSimState({world: simState.world, robot: CreateRobot(event.target.value)});
    }
 
-   resetWorld = () => {
-      this.setState({world: InitWorld(this.state.numRows, this.state.numCols)});
+   const handleRowChange = (event) => {
+      setSimState({world: InitWorld(parseInt(event.target.value), simState.world.numCols), robot: simState.robot});
    }
 
-   handleRobotChange = (event) => {
-      this.setState({robot: CreateRobot(event.target.value)});
+   const handleColChange = (event) => {
+      setSimState({world: InitWorld(simState.world.numRows, parseInt(event.target.value)), robot: simState.robot});
    }
 
-   handleRowChange = (event) => {
-      this.setState({numRows: event.target.value});
+   const resetWorld = () => {
+      setSimState({world: InitWorld(simState.world.numRows, simState.world.numCols), robot: simState.robot});
    }
 
-   handleColChange = (event) => {
-      this.setState({numCols: event.target.value});
+   const stopWorld = () => {
+      setRunningSim(false);
    }
 
-   stopWorld = () => {
-      this.setState({runningSim: false});
+   const startWorld = () => {
+      setRunningSim(true);
    }
 
-   startWorld = () => {
-      this.setState({runningSim: true});
+   const renderRobotTypeOption = (type) => {
+      return <option value={type} key={keyGen.key()}>{type}</option>;
    }
 
-   renderRobotTypeOption(type) {
-      return <option value={type} key={this.state.keyGen.key()}>{type}</option>;
-   }
-
-   renderRobotSelection() {
+   const renderRobotSelection = () => {
       return (
-         <select className='manager-button' value={this.state.robot.type} onChange={this.handleRobotChange}>  
-            {RobotTypes.map((type) => this.renderRobotTypeOption(type))}          
+         <select className='manager-button' value={simState.robot.type} onChange={handleRobotChange}>  
+            {RobotTypes.map((type) => renderRobotTypeOption(type))}          
          </select>   
        );
    }
 
-   renderNumberSelection(num) {
-      return <option value={num} key={this.state.keyGen.key()}>{num}</option>
+   const renderNumberSelection = (num) => {
+      return <option value={num} key={keyGen.key()}>{num}</option>
    }
 
-   renderRowSelection() {
+   const renderRowSelection = () => {
       return (
-         <select className='manager-button' value={this.state.numRows} onChange={this.handleRowChange}>
-            {[1,2,3,4,5,6].map((num) => this.renderNumberSelection(num))}
+         <select className='manager-button' value={simState.world.numRows} onChange={handleRowChange}>
+            {[1,2,3,4,5,6].map((num) => renderNumberSelection(num))}
          </select>
       );
    }
 
-   renderColSelection() {
+   const renderColSelection = () => {
       return (
-         <select className='manager-button' value={this.state.numCols} onChange={this.handleColChange}>
-            {[1,2,3,4,5,6].map((num) => this.renderNumberSelection(num))}
+         <select className='manager-button' value={simState.world.numCols} onChange={handleColChange}>
+            {[1,2,3,4,5,6].map((num) => renderNumberSelection(num))}
          </select>
       );
    }
 
-
-   renderStartStopButton() {
-      if (this.state.runningSim) {
+   const renderStartStopButton = () => {
+      if (runningSim) {
          return (
-            <button onClick={this.stopWorld} className='manager-button'>Stop</button>
+            <button onClick={stopWorld} className='manager-button'>Stop</button>
          );
       }
       return (
-         <button onClick={this.startWorld} className='manager-button'>Start</button>
+         <button onClick={startWorld} className='manager-button'>Start</button>
       );
    }
 
-   renderManagerPane() {
+   const renderManagerPane = () => {
       return (
          <div className='div-pane'>
-            {this.renderRobotSelection()}
-            {this.renderRowSelection()}
-            {this.renderColSelection()}
-            {this.renderStartStopButton()}
-            <button onClick={this.resetWorld} className='manager-button'>RESET</button>
+            {renderRobotSelection()}
+            {renderRowSelection()}
+            {renderColSelection()}
+            {renderStartStopButton()}
+            <button onClick={resetWorld} className='manager-button'>RESET</button>
          </div>
       );
    }
 
-   renderWorld() {
+   const renderWorld = () => {
       return (
-         <WorldSim robot={this.state.robot} world={this.state.world}/>
+         <WorldSim robot={simState.robot} world={simState.world}/>
       );
    }
 
-   render() {
-      return (
-         <div className='div-manager'>
-            {this.renderManagerPane()}
-            {this.renderWorld()}
-         </div>
-      );
-   }
+   return (
+      <div className='div-manager'>
+         {renderManagerPane()}
+         {renderWorld()}
+      </div>
+   );
 }
 
 export default SimManager;

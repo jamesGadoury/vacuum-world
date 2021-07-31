@@ -26,9 +26,11 @@ function WorldSim(props)  {
          props.world.grid.map((cell) => renderCell(cell))
       );
    }
+
+   let cssProperties = {'--numRows': props.world.numRows, '--numCols': props.world.numCols, '--colWidth': 100 / props.world.numCols + '%' };
  
    return (
-      <div className='div-sim'>
+      <div className='div-sim' style={cssProperties}>
          {renderCells()}
       </div>
    );
