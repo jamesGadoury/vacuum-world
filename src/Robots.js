@@ -31,7 +31,7 @@ const BreadthFirstSearch = (world) => {
    let node = {state: world, parent: null, action: null};
    if (RobotOnDirt(node.state)) {
       // on goal already
-      return []; // todo instead of manually return empty and changing to clean; should prob just return "CLEAN"
+      return ["CLEAN"];
    }
 
    let frontier = [ node ];
@@ -56,7 +56,7 @@ const BreadthFirstSearch = (world) => {
          }
       }
    }
-   return []; // if address above todo, then this should return "" since no dirty spot was found
+   return [];
 } 
 
 const BreadthFirstSearchAgent = (world, memory) => { 
@@ -67,10 +67,10 @@ const BreadthFirstSearchAgent = (world, memory) => {
       memory.remainingActions = BreadthFirstSearch(world);
    }
    if (memory.remainingActions.length === 0) {
-      return {action: "CLEAN", memory: memory};
+      return {action: "", memory: memory};
    }
    let action = memory.remainingActions.pop();
-   return (action ? {action: action, memory: memory} : {action: "CLEAN", memory: memory});
+   return (action ? {action: action, memory: memory} : {action: "", memory: memory});
 }
 
 const RandomMovement = () => {

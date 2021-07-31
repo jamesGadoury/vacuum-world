@@ -21,18 +21,14 @@ function SimManager(props) {
          timer.current = setInterval(() => {
             setSimState(prevSimState => {
                let robot = prevSimState.robot;
-               let memoryCopy = Object.assign({}, robot.memory);
                let world = prevSimState.world;
-               const {action, memory} = robot.agentFunction(world, memoryCopy);
-               if (Actions.indexOf(action) === -1) {
-                  console.log(`${action} is not a valid action.`);
-               }
+               const {action, memory} = robot.agentFunction(world, robot.memory);
                return { 
                   world: UpdateWorld(world, action),
                   robot: {type: robot.type, agentFunction: robot.agentFunction, action: action, memory: memory}
                };
             })
-         }, 1000)
+         }, 500)
       } else {
          clearInterval(timer.current);
       }
