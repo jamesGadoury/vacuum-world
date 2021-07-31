@@ -7,7 +7,7 @@ function WorldSim(props)  {
    const renderVacuum = (cell) => {
       if (cell.vacuumPresent) {
          return (
-         <div className='vacuum'><p className='action'>{props.robotActionStr}</p></div>
+         <div className='vacuum'><p className='action'>{props.robot.action}</p></div>
          )
       }
       return;

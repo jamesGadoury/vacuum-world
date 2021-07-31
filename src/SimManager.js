@@ -11,13 +11,11 @@ class SimManager extends React.Component {
       super(props);
       this.state = {
          world: initWorld(props.numRows, props.numCols),
-         robotType: RobotTypes[0],
          robot: CreateRobot(RobotTypes[0]),
          numRows: props.numRows,
          numCols: props.numCols,
          runningSim: true,
          keyGen: new UniqueKeyGenerator(),
-         robotActionStr: "",
       };
 
       this.updateProperties(props.numRows, props.numCols);
@@ -28,15 +26,16 @@ class SimManager extends React.Component {
       document.documentElement.style.setProperty("--numCols", numCols);
       document.documentElement.style.setProperty("--colWidth", 100 / numCols + "%");
    }
-   
 
    stepSimulation = () => {
-      let action = this.state.robot.nextAction(this.state.world);
+      // make memory copy
+      let memoryCopy = Object.assign({}, this.state.robot.memory);
+      const {action, memory} = this.state.robot.agentFunction(this.state.world, memoryCopy);
       if (Actions.indexOf(action) === -1)
          console.log(`${action} is not a valid action.`);
       this.setState({
          world: updateWorld(this.state.world, action),
-         robotActionStr:action,
+         robot: {type: this.state.robot.type, agentFunction: this.state.robot.agentFunction, action: action, memory: memory}
       });
    }
 
@@ -58,25 +57,8 @@ class SimManager extends React.Component {
    }
 
    componentDidUpdate(prevProps, prevState) {
-      let updatedState = false;
-      if (this.props.world !== prevProps.world) {
-         this.setState({
-            world: this.props.world
-         });
-         updatedState = true;
-      }
-      if (this.props.robot !== prevProps.robot) {
-         this.setState({
-            robot: this.props.robot
-         });
-         updatedState = true;
-      }
-      if (updatedState && this.props.runningSim) {
-         this.stopTimer();
-         this.startTimer();
-      }
-      if (this.props.runningSim !== prevProps.runningSim) {
-         if (this.props.runningSim) {
+      if (this.state.runningSim !== prevState.runningSim) {
+         if (this.state.runningSim) {
             this.startTimer();
          } else {
             this.stopTimer();
@@ -97,7 +79,7 @@ class SimManager extends React.Component {
    }
 
    handleRobotChange = (event) => {
-      this.setState({robotType: event.target.value, robot: CreateRobot(event.target.value)});
+      this.setState({robot: CreateRobot(event.target.value)});
    }
 
    handleRowChange = (event) => {
@@ -122,7 +104,7 @@ class SimManager extends React.Component {
 
    renderRobotSelection() {
       return (
-         <select className='manager-button' value={this.state.robotType} onChange={this.handleRobotChange}>  
+         <select className='manager-button' value={this.state.robot.type} onChange={this.handleRobotChange}>  
             {RobotTypes.map((type) => this.renderRobotTypeOption(type))}          
          </select>   
        );
@@ -174,7 +156,7 @@ class SimManager extends React.Component {
 
    renderWorld() {
       return (
-         <WorldSim robot={this.state.robot} world={this.state.world} robotActionStr={this.state.robotActionStr}/>
+         <WorldSim robot={this.state.robot} world={this.state.world}/>
       );
    }
 
