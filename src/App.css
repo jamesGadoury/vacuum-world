@@ -82,9 +82,14 @@ h1 {
   margin-bottom: 50px;
 }
 
+.div-pane {
+  margin-bottom: 20px;
+}
+
 .manager-button {
   font-size: 20px;
   border-radius: 12px;
+  margin-right: 5px;
 }
 
 .sim-cell {

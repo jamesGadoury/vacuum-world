@@ -115,7 +115,7 @@ const DumbAgent = (world, memory) => {
    return {action: nextAction, memory: {lastAction: nextAction}};
 }
 
-const RobotTypes = ["BreadthFirstSearchAgent", "DumbAgent", "RandomAgent"];
+const RobotTypes = ["BFSAgent", "DumbAgent", "RandomAgent"];
 
 const CreateRobot = (RobotType) => {
    if (RobotType === "DumbAgent") {
@@ -124,7 +124,7 @@ const CreateRobot = (RobotType) => {
    if (RobotType === "RandomAgent") {
       return {type: RobotType, agentFunction: RandomAgent, action: "", memory: {}};
    }
-   if (RobotType === "BreadthFirstSearchAgent") {
+   if (RobotType === "BFSAgent") {
       return {type: RobotType, agentFunction: BreadthFirstSearchAgent, action: "", memory: {}}; 
    }
    console.log("Bad Robot Type.");

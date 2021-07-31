@@ -3,7 +3,6 @@ import WorldSim from './WorldSim';
 import {InitWorld, UpdateWorld} from './World';
 import { RobotTypes, CreateRobot } from './Robots';
 import { UniqueKeyGenerator } from './Utilities';
-import { Actions } from './Actions';
 
 function SimManager(props) {
    const [simState, setSimState] = useState({
@@ -28,7 +27,7 @@ function SimManager(props) {
                   robot: {type: robot.type, agentFunction: robot.agentFunction, action: action, memory: memory}
                };
             })
-         }, 500)
+         }, 1000)
       } else {
          clearInterval(timer.current);
       }
@@ -66,7 +65,7 @@ function SimManager(props) {
       return (
          <select className='manager-button' value={simState.robot.type} onChange={handleRobotChange}>  
             {RobotTypes.map((type) => renderRobotTypeOption(type))}          
-         </select>   
+         </select>  
        );
    }
 
