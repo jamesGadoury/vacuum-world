@@ -1,10 +1,10 @@
 // hello world
 
-function selectRandomCell(gridSize) {
+function SelectRandomCell(gridSize) {
    return Math.floor(Math.random() * gridSize);
 }
  
-function getFlattenedIdx(x, y, numCols) {
+function GetFlattenedIdx(x, y, numCols) {
    return y*numCols+x;
 }
  
@@ -16,24 +16,24 @@ class Cell {
    }
 }
 
-function initGrid(numRows, numCols) {
+function InitGrid(numRows, numCols) {
    let grid = [];
    for (let i = 0; i < numRows; ++i) {
       for (let j = 0; j < numCols; ++j) {
-         grid[getFlattenedIdx(j,i,numCols)] = new Cell(j, i, false, false);
+         grid[GetFlattenedIdx(j,i,numCols)] = new Cell(j, i, false, false);
       }
    }
    return grid;
 }
 
-function initWorld(numRows, numCols) {
-   let world = new World(numRows, numCols, initGrid(numRows, numCols), {x: selectRandomCell(numCols), y: selectRandomCell(numRows)});
+function InitWorld(numRows, numCols) {
+   let world = new World(numRows, numCols, InitGrid(numRows, numCols), {x: SelectRandomCell(numCols), y: SelectRandomCell(numRows)});
    world.grid[world.robotIdx()].vacuumPresent = true;
    world.markRandomSpotsWithDirt();
    return world;
 }
 
-function updateWorld(world, robotAction) {
+function UpdateWorld(world, robotAction) {
    let grid     = world.grid.map(a => Object.assign({}, a));
    let pos      = { ...world.robotPosition };
    let robotIdx = world.robotIdx();
@@ -57,7 +57,7 @@ function updateWorld(world, robotAction) {
       else if (robotAction === "DOWN" && pos.y < numRows-1) {
          pos.y = pos.y+1;
       }
-      grid[getFlattenedIdx(pos.x, pos.y, numCols)].vacuumPresent = true;
+      grid[GetFlattenedIdx(pos.x, pos.y, numCols)].vacuumPresent = true;
    }
 
    return new World(numRows, numCols, grid, pos);
@@ -79,7 +79,7 @@ class World {
    }
 
    robotIdx() {
-      return getFlattenedIdx(this.robotPosition.x, this.robotPosition.y, this.numCols);
+      return GetFlattenedIdx(this.robotPosition.x, this.robotPosition.y, this.numCols);
    }
 
    size() {
@@ -87,7 +87,7 @@ class World {
    }
 
    randomIdx() {
-      return selectRandomCell(this.size());
+      return SelectRandomCell(this.size());
    }
 
    robotCell() {
@@ -99,4 +99,4 @@ class World {
    }
 }
 
-export {initWorld, updateWorld};
+export {InitWorld, UpdateWorld};

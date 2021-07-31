@@ -1,10 +1,10 @@
 import {Actions} from './Actions';
-import {updateWorld} from './World';
+import {UpdateWorld} from './World';
 
-const expand = (world, node) => {
+const Expand = (world, node) => {
    let children = [];
    for (let action of ["LEFT", "RIGHT", "UP", "DOWN"]) {
-      let newWorld = updateWorld(world, action);
+      let newWorld = UpdateWorld(world, action);
       if (world.robotIdx() !== newWorld.robotIdx()) {
          // this is a valid action, append list with this node
          children.push({state: newWorld, parent: node, action: action});
@@ -14,7 +14,7 @@ const expand = (world, node) => {
    return children;
 }
 
-const retrieveActionsToNode = (child) => {
+const RetrieveActionsToNode = (child) => {
    let actions = [ child.action ];
    let parent = child.parent;
    while (parent != null) {
@@ -26,46 +26,45 @@ const retrieveActionsToNode = (child) => {
    return actions;
 }
 
-const BreadthFirstSearchBot = (world, memory) => { 
+const BreadthFirstSearch = (world) => {
+   // initialize root node w/ state = world
+   let node = {state: world, parent: null, action: null};
+   if (node.state.robotOnDirt()) {
+      // on goal already
+      return []; // todo instead of manually return empty and changing to clean; should prob just return "CLEAN"
+   }
+
+   let frontier = [ node ];
+   // for reached, we can just keep track of the robot idx, since
+   // the world will only change in the scope of the robots position
+   // in this current world model -> not really a correct representation
+   // but I really, really just want to get this to work for now 
+   let reached = [ node.state.robotIdx() ];
+
+   while (frontier.length !== 0) {
+      node = frontier.shift(); // fifo like
+      let children = Expand(node.state, node);
+
+      for (let child of children) {
+         if (child.state.robotOnDirt()) {
+            // on goal
+            return RetrieveActionsToNode(child);
+         }
+         if (!reached.includes(child.state.robotIdx())) {
+            reached.push(child.state.robotIdx());
+            frontier.push(child);
+         }
+      }
+   }
+   return []; // if address above todo, then this should return "" since no dirty spot was found
+} 
+
+const BreadthFirstSearchAgent = (world, memory) => { 
    if (!memory.hasOwnProperty('remainingActions')) {
       memory.remainingActions = [];
    }
-
-   const breadthFirstSearch = (world) => {
-      // initialize root node w/ state = world
-      let node = {state: world, parent: null, action: null};
-      if (node.state.robotOnDirt()) {
-         // on goal already
-         return []; // todo instead of manually return empty and changing to clean; should prob just return "CLEAN"
-      }
-
-      let frontier = [ node ];
-      // for reached, we can just keep track of the robot idx, since
-      // the world will only change in the scope of the robots position
-      // in this current world model -> not really a correct representation
-      // but I really, really just want to get this to work for now 
-      let reached = [ node.state.robotIdx() ];
-
-      while (frontier.length !== 0) {
-         node = frontier.shift(); // fifo like
-         let children = expand(node.state, node);
-
-         for (let child of children) {
-            if (child.state.robotOnDirt()) {
-               // on goal
-               return retrieveActionsToNode(child);
-            }
-            if (!reached.includes(child.state.robotIdx())) {
-               reached.push(child.state.robotIdx());
-               frontier.push(child);
-            }
-         }
-      }
-      return []; // if address above todo, then this should return "" since no dirty spot was found
-   } 
-
    if (memory.remainingActions.length === 0) { // no remaining actions defined, search to create list
-      memory.remainingActions = breadthFirstSearch(world);
+      memory.remainingActions = BreadthFirstSearch(world);
    }
    if (memory.remainingActions.length === 0) {
       return {action: "CLEAN", memory: memory};
@@ -74,22 +73,22 @@ const BreadthFirstSearchBot = (world, memory) => {
    return (action ? {action: action, memory: memory} : {action: "CLEAN", memory: memory});
 }
 
-const randomMovement = () => {
+const RandomMovement = () => {
    return Actions[Math.floor(Math.random() * Math.floor(Actions.length-1) + 1)];
 }
 
-const RandomBot = (world, memory) => {
+const RandomAgent = (world, memory) => {
    let nextAction = "";
    if (world.robotCell().dirtPresent) {
       nextAction = "CLEAN";
    }
    else {
-      nextAction = randomMovement();
+      nextAction = RandomMovement();
    }
    return {action: nextAction, memory: memory};
 }
 
-const DumbBot = (world, memory) => {
+const DumbAgent = (world, memory) => {
    if (!memory.hasOwnProperty('lastAction')) {
       memory.lastAction = "";
    }
@@ -115,17 +114,17 @@ const DumbBot = (world, memory) => {
    return {action: nextAction, memory: {lastAction: nextAction}};
 }
 
-const RobotTypes = ["BreadthFirstSearchBot", "DumbBot", "RandomBot"];
+const RobotTypes = ["BreadthFirstSearchAgent", "DumbAgent", "RandomAgent"];
 
 const CreateRobot = (RobotType) => {
-   if (RobotType === "DumbBot") {
-      return {type: RobotType, agentFunction: DumbBot, action: "", memory: {}};
+   if (RobotType === "DumbAgent") {
+      return {type: RobotType, agentFunction: DumbAgent, action: "", memory: {}};
    } 
-   if (RobotType === "RandomBot") {
-      return {type: RobotType, agentFunction: RandomBot, action: "", memory: {}};
+   if (RobotType === "RandomAgent") {
+      return {type: RobotType, agentFunction: RandomAgent, action: "", memory: {}};
    }
-   if (RobotType === "BreadthFirstSearchBot") {
-      return {type: RobotType, agentFunction: BreadthFirstSearchBot, action: "", memory: {}}; 
+   if (RobotType === "BreadthFirstSearchAgent") {
+      return {type: RobotType, agentFunction: BreadthFirstSearchAgent, action: "", memory: {}}; 
    }
    console.log("Bad Robot Type.");
    return null;

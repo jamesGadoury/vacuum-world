@@ -1,16 +1,15 @@
 import React from 'react';
 import WorldSim from './WorldSim';
-import {initWorld} from './World';
+import {InitWorld, UpdateWorld} from './World';
 import { RobotTypes, CreateRobot } from './Robots';
 import { UniqueKeyGenerator } from './Utilities';
-import {updateWorld} from './World';
 import { Actions } from './Actions';
 
 class SimManager extends React.Component {
    constructor(props) {
       super(props);
       this.state = {
-         world: initWorld(props.numRows, props.numCols),
+         world: InitWorld(props.numRows, props.numCols),
          robot: CreateRobot(RobotTypes[0]),
          numRows: props.numRows,
          numCols: props.numCols,
@@ -34,7 +33,7 @@ class SimManager extends React.Component {
       if (Actions.indexOf(action) === -1)
          console.log(`${action} is not a valid action.`);
       this.setState({
-         world: updateWorld(this.state.world, action),
+         world: UpdateWorld(this.state.world, action),
          robot: {type: this.state.robot.type, agentFunction: this.state.robot.agentFunction, action: action, memory: memory}
       });
    }
@@ -75,7 +74,7 @@ class SimManager extends React.Component {
    }
 
    resetWorld = () => {
-      this.setState({world: initWorld(this.state.numRows, this.state.numCols)});
+      this.setState({world: InitWorld(this.state.numRows, this.state.numCols)});
    }
 
    handleRobotChange = (event) => {
